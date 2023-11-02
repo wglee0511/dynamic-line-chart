@@ -1,0 +1,207 @@
+[
+  {
+    "date": "1998-01-30",
+    "value": 1000,
+    "valueBchk": 1000,
+    "valueIdx": 1000
+  },
+  {
+    "date": "1998-02-28",
+    "value": 1007,
+    "valueBchk": 1014.9,
+    "valueIdx": 1066.4
+  },
+  {
+    "date": "1998-03-31",
+    "value": 1019,
+    "valueBchk": 1057.5,
+    "valueIdx": 1110.1
+  },
+  {
+    "date": "1998-04-30",
+    "value": 1060.3,
+    "valueBchk": 1037.8,
+    "valueIdx": 1119.6
+  },
+  {
+    "date": "1998-05-31",
+    "value": 1077.9,
+    "valueBchk": 1032.4,
+    "valueIdx": 1104.3
+  },
+  {
+    "date": "1998-06-30",
+    "value": 1112.6,
+    "valueBchk": 1049,
+    "valueIdx": 1129.2
+  },
+  {
+    "date": "1998-07-31",
+    "value": 1116.5,
+    "valueBchk": 1070,
+    "valueIdx": 1126.1
+  },
+
+  {
+    "date": "1998-08-31",
+    "value": 1133.3,
+    "valueBchk": 1051.1,
+    "valueIdx": 974.6
+  },
+  {
+    "date": "1998-09-30",
+    "value": 1158,
+    "valueBchk": 1045.1,
+    "valueIdx": 990.5
+  },
+  {
+    "date": "1998-10-31",
+    "value": 1173.2,
+    "valueBchk": 1061.2,
+    "valueIdx": 1078.8
+  },
+  {
+    "date": "1998-11-30",
+    "value": 1207.6,
+    "valueBchk": 1092.2,
+    "valueIdx": 1141.6
+  },
+  {
+    "date": "1998-12-31",
+    "value": 1252.8,
+    "valueBchk": 1134.6,
+    "valueIdx": 1196
+  },
+  {
+    "date": "1999-01-31",
+    "value": 1286.9,
+    "valueBchk": 1196.9,
+    "valueIdx": 1220.9
+  },
+  {
+    "date": "1999-02-28",
+    "value": 1295.7,
+    "valueBchk": 1166.1,
+    "valueIdx": 1187
+  },
+  {
+    "date": "1999-03-31",
+    "value": 1321.5,
+    "valueBchk": 1199.8,
+    "valueIdx": 1235.1
+  },
+  {
+    "date": "1999-04-30",
+    "value": 1339,
+    "valueBchk": 1259.7,
+    "valueIdx": 1282.4
+  },
+  {
+    "date": "1999-05-31",
+    "value": 1318.1,
+    "valueBchk": 1243.6,
+    "valueIdx": 1234.2
+  },
+  {
+    "date": "1999-06-30",
+    "value": 1290.7,
+    "valueBchk": 1273.3,
+    "valueIdx": 1290.4
+  },
+  {
+    "date": "1999-07-31",
+    "value": 1242.1,
+    "valueBchk": 1265.6,
+    "valueIdx": 1285.2
+  },
+  {
+    "date": "1999-08-31",
+    "value": 1251.9,
+    "valueBchk": 1267.4,
+    "valueIdx": 1281.5
+  },
+  {
+    "date": "1999-09-30",
+    "value": 1316.7,
+    "valueBchk": 1273.4,
+    "valueIdx": 1267.7
+  },
+  {
+    "date": "1999-10-31",
+    "value": 1316.7,
+    "valueBchk": 1273.4,
+    "valueIdx": 1267.7
+  },
+  {
+    "date": "1999-11-30",
+    "value": 1371.6,
+    "valueBchk": 1288.7,
+    "valueIdx": 1332.2
+  },
+  {
+    "date": "1999-12-31",
+    "value": 1397.4,
+    "valueBchk": 1357.7,
+    "valueIdx": 1368.4
+  },
+  {
+    "date": "2000-01-31",
+    "value": 1412,
+    "valueBchk": 1437,
+    "valueIdx": 1477.8
+  },
+  {
+    "date": "2000-02-29",
+    "value": 1443.9,
+    "valueBchk": 1450.7,
+    "valueIdx": 1391.9
+  },
+  {
+    "date": "2000-03-31",
+    "value": 1461,
+    "valueBchk": 1537,
+    "valueIdx": 1394.3
+  },
+  {
+    "date": "2000-04-30",
+    "value": 1531.5,
+    "valueBchk": 1560.8,
+    "valueIdx": 1489.3
+  },
+  {
+    "date": "2000-05-31",
+    "value": 1571.1,
+    "valueBchk": 1500.7,
+    "valueIdx": 1425
+  },
+  {
+    "date": "2000-06-30",
+    "value": 1671.3,
+    "valueBchk": 1499.7,
+    "valueIdx": 1387.6
+  },
+  {
+    "date": "2000-07-31",
+    "value": 1660.3,
+    "valueBchk": 1507.5,
+    "valueIdx": 1432.9
+  },
+  {
+    "date": "2000-08-31",
+    "value": 1671.5,
+    "valueBchk": 1500.8,
+    "valueIdx": 1391.2
+  },
+  {
+    "date": "2000-09-30",
+    "value": 1681.3,
+    "valueBchk": 1554.6,
+    "valueIdx": 1435.1
+  },
+  {
+    "date": "2000-10-31",
+    "value": 1717.5,
+    "valueBchk": 1551.1,
+    "valueIdx": 1357.5
+  }
+]

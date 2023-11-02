@@ -1,0 +1,428 @@
+<!DOCTYPE html><meta charset="utf-8" />
+<style>
+  #cumul body {
+    font: 10px sans-serif;
+  }
+
+  body {
+    touch-action: pan-x pan-y;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .x.axis path {
+    display: none;
+  }
+
+  .myActualLine {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+
+  .grid .tick {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+  }
+  .grid path {
+    stroke-width: 0;
+  }
+  .navigator .data {
+    fill: lightgrey;
+    stroke-width: 0px;
+  }
+
+  .navigator .line {
+    fill: none;
+    stroke: darkgrey;
+    stroke-width: 1px;
+  }
+  .navigator .viewport {
+    stroke: grey;
+    fill: black;
+    fill-opacity: 0.2;
+  }
+  .chart .overlay {
+    stroke-width: 0px;
+    fill-opacity: 0;
+  }
+</style>
+
+<html>
+  <head>
+    <!--<script src="d3.min.js" type="text/JavaScript"></script>-->
+    <!-- android protect pinch move -->
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div id="cumul">
+      <script>
+        var margin = { top: 30, right: 50, bottom: 50, left: 50 },
+          width = 960 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+        var navWidth = width,
+          navHeight = 100 - margin.top - margin.bottom;
+
+        var formatDate = d3.time.format("%Y-%m-%d").parse;
+
+        var plotChart = d3
+          .select("body")
+          .classed("chart", true)
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+
+        var plotArea = plotChart
+          .append("g")
+          .attr("clip-path", "url(#plotAreaClip)");
+
+        plotArea
+          .append("clipPath")
+          .attr("id", "plotAreaClip")
+          .append("rect")
+          .attr({ width: width, height: height });
+
+        var navChart = d3
+          .select("body")
+          .classed("chart", true)
+          .append("svg")
+          .classed("navigator", true)
+          .attr("width", navWidth + margin.left + margin.right)
+          .attr("height", navHeight + margin.top + margin.bottom)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+        d3.json("json.json", function (error, data) {
+          if (error) throw error;
+          data.forEach(function (d) {
+            d.date = formatDate(d.date);
+            d.value = +d.value;
+            d.valueBchk = +d.valueBchk;
+            d.valueIdx = +d.valueIdx;
+          });
+
+          var minN = d3
+              .min(data, function (d) {
+                return d.date;
+              })
+              .getTime(),
+            maxN = d3
+              .max(data, function (d) {
+                return d.date;
+              })
+              .getTime();
+          var minDate = new Date(minN - 8.64e7),
+            maxDate = new Date(maxN + 8.64e7);
+          var yMin = d3.min(data, function (d) {
+              return Math.min(d.value, d.valueBchk, d.valueIdx);
+            }),
+            yMax = d3.max(data, function (d) {
+              return Math.max(d.value, d.valueBchk, d.valueIdx);
+            });
+
+          var xScale = d3.time
+              .scale()
+              .domain([minDate, maxDate])
+              .range([0, width]),
+            yScale = d3.scale
+              .linear()
+              .domain([yMin, yMax])
+              .nice()
+              .range([height, 0]);
+
+          var navXScale = d3.time
+              .scale()
+              .domain([minDate, maxDate])
+              .range([0, navWidth]),
+            navYScale = d3.scale
+              .linear()
+              .domain([yMin, yMax])
+              .range([navHeight, 0]);
+
+          var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5);
+
+          var yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+          plotChart
+            .append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+          plotChart
+            .append("text") // text label for the x axis
+            .attr(
+              "transform",
+              "translate(" + width / 2 + " ," + (height + margin.bottom) + ")"
+            )
+            .style("text-anchor", "middle")
+            .text("Dates");
+
+          plotChart.append("g").attr("class", "y axis").call(yAxis);
+
+          plotChart
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Vami");
+
+          plotChart
+            .append("text")
+            .attr("x", width / 2)
+            .attr("y", 0 - margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
+            .text("Value-Added Monthly Index");
+
+          var navXAxis = d3.svg.axis().scale(navXScale).orient("bottom");
+
+          navChart
+            .append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + navHeight + ")")
+            .call(navXAxis);
+
+          var line = d3.svg
+            .line()
+            .interpolate("monotone")
+            .x(function (d) {
+              return xScale(d.date);
+            })
+            .y(function (d) {
+              return yScale(d.value);
+            });
+
+          var line2 = d3.svg
+            .line()
+            //.interpolate("monotone")
+            .x(function (d) {
+              return xScale(d.date);
+            })
+            .y(function (d) {
+              return yScale(d.valueBchk);
+            });
+
+          var line3 = d3.svg
+            .line()
+            //.interpolate("monotone")
+            .x(function (d) {
+              return xScale(d.date);
+            })
+            .y(function (d) {
+              return yScale(d.valueIdx);
+            });
+
+          var dataSeries = plotArea
+            .append("g")
+            .attr("class", "line")
+            .datum(data)
+            .call(line);
+
+          var dataSeries2 = plotArea
+            .append("g")
+            .attr("class", "line")
+            .datum(data)
+            .call(line2);
+
+          var dataSeries3 = plotArea
+            .append("g")
+            .attr("class", "line")
+            .datum(data)
+            .call(line3);
+
+          var navData = d3.svg
+            .area()
+            .x(function (d) {
+              return navXScale(d.date);
+            })
+            .y0(navHeight)
+            .y1(function (d) {
+              return navYScale(d.value);
+            });
+
+          var navLine = d3.svg
+            .line()
+            .x(function (d) {
+              return navXScale(d.date);
+            })
+            .y(function (d) {
+              return navYScale(d.value);
+            });
+
+          plotArea
+            .append("path")
+            .datum(data)
+            .attr("class", "myActualLine")
+            .attr("d", line);
+
+          plotChart
+            .append("text")
+            .attr(
+              "transform",
+              "translate(" +
+                (width + 3) +
+                "," +
+                yScale(data[data.length - 1].value) +
+                ")"
+            )
+            .attr("dy", ".35em")
+            .attr("text-anchor", "start")
+            .text("Fund");
+
+          //plotChart.append("path")
+          //    .datum(data)
+          //    .attr("class", "line")
+          //    .style("stroke", "red")
+          //    .attr("d", line2);
+
+          // plotChart.append("text")
+          //      .attr("transform", "translate(" + (width + 3) + "," + yScale(data[data.length - 1].valueBchk) + ")")
+          //      .attr("dy", ".35em")
+          //      .style("fill", "red")
+          //      .attr("text-anchor", "start")
+          //      .text("Bchk");
+
+          // plotChart.append("path")
+          //     .datum(data)
+          //     .attr("class", "line")
+          //     .style("stroke", "blue")
+          //     .attr("d", line3);
+
+          // plotChart.append("text")
+          //      .attr("transform", "translate(" + (width + 3) + "," + yScale(data[data.length - 1].valueIdx) + ")")
+          //      .attr("dy", ".35em")
+          //      .style("fill", "blue")
+          //      .attr("text-anchor", "start")
+          //      .text("Idx");
+
+          navChart
+            .append("path")
+            .attr("class", "data")
+            .attr("d", navData(data));
+
+          navChart
+            .append("path")
+            .attr("class", "line")
+            .attr("d", navLine(data));
+
+          var viewport = d3.svg
+            .brush()
+            .x(navXScale)
+            .on("brush", function () {
+              xScale.domain(
+                viewport.empty() ? navXScale.domain() : viewport.extent()
+              );
+              redrawChart();
+            });
+
+          var zoom = d3.behavior
+            .zoom()
+            .x(xScale)
+            .on("zoom", function (e) {
+              if (xScale.domain()[0] < minDate) {
+                var x =
+                  zoom.translate()[0] - xScale(minDate) + xScale.range()[0];
+                zoom.translate([x, 0]);
+              } else if (xScale.domain()[1] > maxDate) {
+                var x =
+                  zoom.translate()[0] - xScale(maxDate) + xScale.range()[1];
+                zoom.translate([x, 0]);
+              }
+              redrawChart();
+              updateViewportFromChart();
+            });
+
+          //x.domain(d3.extent(data, function (d) { return d.date; }));
+          //y.domain([d3.min(data, function(d) {return Math.min(d.value, d.valueBchk, d.valueIdx); }), d3.max(data, function(d) {return Math.max(d.value, d.valueBchk, d.valueIdx); })]);
+
+          navChart
+            .append("g")
+            .attr("class", "viewport")
+            .call(viewport)
+            .selectAll("rect")
+            .attr("height", navHeight);
+
+          var overlay = d3.svg
+            .area()
+            .x(function (d) {
+              return xScale(d.date);
+            })
+            .y0(0)
+            .y1(height);
+
+          plotArea
+            .append("path")
+            .attr("class", "overlay")
+            .attr("d", overlay(data))
+            .call(zoom);
+
+          viewport.on("brushend", function () {
+            updateZoomFromChart();
+          });
+
+          var daysShown = 30;
+
+          xScale.domain([
+            data[data.length - daysShown - 1].date,
+            data[data.length - 1].date,
+          ]);
+
+          function redrawChart() {
+            console.log("xScale: ", xScale.domain());
+            plotChart.select(".myActualLine").attr("d", line);
+            //dataSeries2.call(line2);
+            //dataSeries3.call(line3);
+            plotChart.select(".x.axis").call(xAxis);
+          }
+
+          function updateViewportFromChart() {
+            if (
+              xScale.domain()[0] <= minDate &&
+              xScale.domain()[1] >= maxDate
+            ) {
+              viewport.clear();
+            } else {
+              viewport.extent(xScale.domain());
+            }
+
+            navChart.select(".viewport").call(viewport);
+          }
+
+          function updateZoomFromChart() {
+            zoom.x(xScale);
+
+            var fullDomain = maxDate - minDate,
+              currentDomain = xScale.domain()[1] - xScale.domain()[0];
+
+            var minScale = currentDomain / fullDomain,
+              maxScale = minScale * 20;
+
+            zoom.scaleExtent([minScale, maxScale]);
+          }
+
+          redrawChart();
+          updateZoomFromChart();
+          updateViewportFromChart();
+        });
+      </script>
+    </div>
+  </body>
+</html>
